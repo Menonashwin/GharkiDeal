@@ -1,118 +1,146 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
-
 import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import OnboardScreen from './src/Screens/ServiceProvider/OnboardScreen';
+import PhoneVerificationScreen from './src/Screens/ServiceProvider/PhoneVerificationScreen';
+import OTPVerificationScreen from './src/Screens/ServiceProvider/OtpVerificationScreen';
+import ServiceProviderDetails from './src/Screens/ServiceProvider/ServiceProviderDetails';
+import ServiceOfferScreen from './src/Screens/ServiceProvider/ServiceOfferScreen';
+import DocumentUploadScreen from './src/Screens/ServiceProvider/DocumentUploadScreen';
+import BankDetailsScreen from './src/Screens/ServiceProvider/BankDetailScreen';
+import UserVerification from './src/Screens/User/UserVerification';
+import UserOtpScreen from './src/Screens/User/UserOtpScreen';
+import UserDetails from './src/Screens/User/UserDetails';
+import UserProfile from './src/Screens/User/userProfile';
+import EditProfile from './src/Screens/User/EditProfile';
+import UserHomeScreen from './src/Screens/User/UserHomeScreen';
+import NotificationSettings from './src/Screens/User/NotificationSettings';
+import AddBankDetails from './src/Screens/User/AddBankDetails';
+import LogoutConfirmation from './src/Screens/User/LogoutConfirmation';
+import PopularServicesScreen from './src/Screens/User/PopularService';
+import ServiceProvidersScreen from './src/Screens/User/ServiceProviderList';
+import ServiceProviderDetailsScreen from './src/Screens/User/ServiceProviderDetails';
+import ServiceProviderBookingScreen from './src/Screens/User/BookingAddress';
+import BookingDateScreen from './src/Screens/User/BookingDate';
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const Stack = createNativeStackNavigator();
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+const App = () => {
   return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Onboard"
+          component={OnboardScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PhoneVerification"
+          component={PhoneVerificationScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="OTPInput"
+          component={OTPVerificationScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ServiceProviderDetails"
+          component={ServiceProviderDetails}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="ServiceOffer"
+          component={ServiceOfferScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="DocumentUpload"
+          component={DocumentUploadScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="BankDetails"
+          component={BankDetailsScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserVerification"
+          component={UserVerification}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserOtp"
+          component={UserOtpScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserDetails"
+          component={UserDetails}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserHome"
+          component={UserHomeScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="UserProfile"
+          component={UserProfile}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Notification"
+          component={NotificationSettings}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="PaymentMethod"
+          component={AddBankDetails}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="LogoutConfirmation"
+          component={LogoutConfirmation}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="PopularService"
+          component={PopularServicesScreen}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="ServiceProviderList"
+          component={ServiceProvidersScreen}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="ServiceProviderBookDetails"
+          component={ServiceProviderDetailsScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="BookingAddress"
+          component={ServiceProviderBookingScreen}
+          options={{headerShown: false}}
+        />
+
+        <Stack.Screen
+          name="BookingDate"
+          component={BookingDateScreen}
+          options={{headerShown: false}}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
-
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
-
-  return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
-
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+};
 
 export default App;
