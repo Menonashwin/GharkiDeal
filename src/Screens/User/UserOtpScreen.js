@@ -9,12 +9,12 @@ import {
 } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-toast-message';
-import * as Keychain from 'react-native-keychain';
-import {fetchData} from '../../utils/ApiService';
+import {useMutation} from '../../utils/ApiService';
 
 const UserOtpScreen = ({navigation, route}) => {
   const [otp, setOtp] = useState('');
   const {phone, otp: receivedOTP} = route.params;
+  const { fetchData, loading: uploading, data } = useMutation();
 
   useEffect(() => {
     setOtp(receivedOTP);
@@ -24,17 +24,22 @@ const UserOtpScreen = ({navigation, route}) => {
     });
   }, [receivedOTP]);
 
-  console.log('otp error occured');
   const handleVerify = async () => {
     if (otp.length === 5) {
       try {
-        const response = await fetchData('auth/verify-otp', 'POST', {
-          phoneNumber: phone,
+
+        const receivedOTPData={
+          ph_no: phone,
           otp: receivedOTP,
-          role: 'user',
+        }
+        console.log('Received OTP:', receivedOTPData);
+        const response = await fetchData( {
+          endpoint: 'auth/verify-otp',
+          method: 'POST',
+          data: receivedOTPData,
         });
         console.log(response);
-        tokenauth(response.authToken);
+        navigation.navigate('UserDetails');
       } catch (error) {
         console.error('Error.. :', error);
       }
@@ -43,23 +48,7 @@ const UserOtpScreen = ({navigation, route}) => {
     }
   };
 
-  const tokenauth = async recievedtoken => {
-    const token = recievedtoken;
 
-    await Keychain.setGenericPassword('keyToken', token);
-
-    try {
-      const credentials = await Keychain.getGenericPassword();
-      if (credentials) {
-        console.log('succesfully retrieved' + credentials.password);
-        navigation.navigate('UserDetails');
-      } else {
-        console.log('No credentials stored');
-      }
-    } catch (error) {
-      console.error('failed', error);
-    }
-  };
 
   return (
     <SafeAreaView style={styles.container}>

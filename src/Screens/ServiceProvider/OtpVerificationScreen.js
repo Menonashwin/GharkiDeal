@@ -6,17 +6,17 @@ import {
   TouchableOpacity,
   StyleSheet,
   SafeAreaView,
-
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import * as Keychain from 'react-native-keychain';
 import axios from 'axios';
 import {API_URL} from 'react-native-dotenv';
+import {useMutation} from '../../utils/ApiService';
 
 const OTPVerificationScreen = ({navigation, route}) => {
   const [otp, setOtp] = useState('');
-
+  const {fetchData, loading: uploading, data} = useMutation();
   const {phone, otp: receivedOTP} = route.params;
 
   useEffect(() => {
@@ -30,28 +30,19 @@ const OTPVerificationScreen = ({navigation, route}) => {
   const handleVerify = async () => {
     if (otp.length === 5) {
       try {
-        const response = await axios.post(
-          `${API_URL}auth/verify-otp`,
-          {
-            phoneNumber: phone,
-            otp: receivedOTP,
-            role: 'service_provider',
-          },
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
-        );
-        console.log(response.data);
-        serviceTokenAuth(response.data.authToken);
-      } catch (error) {
-        console.error('Error :', error);
-        Toast.show({
-          type: 'error',
-          text1: 'Verification failed',
-          text2: 'Please try again',
+        const providerOtpData = {
+          ph_no: phone,
+          otp: receivedOTP,
+        };
+        const response = await fetchData({
+          endpoint: 'auth/verify-otp',
+          method: 'POST',
+          data: providerOtpData,
         });
+        console.log(response.data);
+        navigation.navigate('ServiceProviderDetails');
+      } catch (error) {
+        console.error('Upload Error :', error);
       }
     } else {
       Toast.show({
@@ -59,24 +50,6 @@ const OTPVerificationScreen = ({navigation, route}) => {
         text1: 'Invalid PIN',
         text2: 'Please enter a valid 5-digit PIN',
       });
-    }
-  };
-
-  const serviceTokenAuth = async recievedtoken => {
-    const token = recievedtoken;
-
-    await Keychain.setGenericPassword('keyToken', token);
-
-    try {
-      const credentials = await Keychain.getGenericPassword();
-      if (credentials) {
-        console.log('succesfully retrieved' + credentials.password);
-        navigation.navigate('ServiceProviderDetails');
-      } else {
-        console.log('No credentials stored');
-      }
-    } catch (error) {
-      console.error('failed', error);
     }
   };
 

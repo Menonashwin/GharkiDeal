@@ -6,31 +6,42 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import {fetchData} from '../../utils/ApiService';
+import { useMutation } from '../../utils/ApiService';
 
 const UserVerification = ({navigation}) => {
   const [phone, setPhone] = useState('');
-  console.log('error occuredd');
+  const { fetchData, loading: uploading, otpData } = useMutation()
 
   const handleSubmit = async () => {
+    if (!phone){
+      Alert.alert('Please enter a valid phone number');
+      return;
+    }
     try {
-      const response = await fetchData(
-        `auth/login`,'POST',
+
+      const otpData={
+        ph_no: phone,
+        role: 'user',
+      }
+
+      const response = await fetchData (
         {
-          phoneNumber: phone,
-          role: 'user',
+          endpoint: 'auth/phone',
+          method: 'POST',
+          data: otpData,
         },
       );
-      console.log(response.data);
       navigation.navigate('UserOtp', {
         phone: phone,
         otp: response.otp,
       });
-      Alert.alert('Success', 'Data posted successfully');
+      
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Upload Error:', error);
+      Alert.alert('Error', 'Failed to submit form');
     }
   };
 

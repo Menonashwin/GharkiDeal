@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, {useState} from 'react';
 import {
   View,
@@ -8,34 +7,34 @@ import {
   StyleSheet,
   SafeAreaView,
 } from 'react-native';
-import {API_URL} from 'react-native-dotenv';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import Toast from 'react-native-toast-message';
-
+import {useMutation} from '../../utils/ApiService';
 const PhoneVerificationScreen = ({navigation}) => {
   const [phone, setPhone] = useState('');
+  const { fetchData, loading: uploading, data } = useMutation();
 
   console.log('error occured');
   const handleSubmit = async () => {
     try {
-      const response = await axios.post(
-        `${API_URL}auth/login`,
+      const loginData={
+        ph_no: phone,
+        role: 'service_provider',
+      }
+      const response = await fetchData(
         {
-          phoneNumber: phone,
-          role: 'service_provider',
-        },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
+          endpoint: 'auth/phone',
+          method: 'POST',
+          data: loginData,
+        },     
       );
+      console.log('Response:', response);
       navigation.navigate('OTPInput', {
         phone: phone,
-        otp: response.data.otp,
+        otp: response.otp,
       });
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Upload Error:', error);
       Toast.show({
         type: 'error',
         text1: 'Verification failed',

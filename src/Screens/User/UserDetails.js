@@ -1,5 +1,4 @@
 import {Picker} from '@react-native-picker/picker';
-import axios, {Axios} from 'axios';
 import React, {useState} from 'react';
 import {
   View,
@@ -11,9 +10,8 @@ import {
   Modal,
   Alert,
 } from 'react-native';
-import {API_URL} from 'react-native-dotenv';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-
+import { useMutation } from '../../utils/ApiService';
 const UserDetails = ({navigation}) => {
   const [details, setDetails] = useState({
     name: '',
@@ -24,8 +22,7 @@ const UserDetails = ({navigation}) => {
   const [selectedZone, setSelectedZone] = useState('');
   const zone = ['Kakkanad', 'Palarivattom', 'kalamassery', 'Edappally'];
   const [showModal, setShowModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const { fetchData, loading: uploading, data } = useMutation();
   const validateForm = () => {
     if (!details.name.trim()) {
       Alert.alert('Error', 'Please enter your full name');
@@ -47,33 +44,34 @@ const UserDetails = ({navigation}) => {
   };
 
   const handleSave = async () => {
-    if (!validateForm()) return;
-    setIsLoading(true);
+    if (!validateForm()) {
+          Alert.alert('Error', 'Please provide at least one field');
+          return;
+        }
+    
     try {
-      const response = await axios.post(
-        `${API_URL}users/create-profile`,
-        {
-          fullName: details.name,
+      const detailData = {
+        name: details.name,
           email: details.email,
           address: details.address,
           zone: selectedZone,
-        },
+      }
+      console.log('detaildata : ', data)
+      const response = await fetchData(
         {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          endpoint: 'users/profile',
+          method: 'PUT',
+          data: detailData,
         },
       );
       setShowModal(true);
     } catch (error) {
+      console.error('Upload error:', error);
       Alert.alert(
-        'Error',
-        'There was a problem saving your profile. Please try again.',
+        'Error', 'Failed to submit form'
       );
       console.error('Error saving profile:', error);
-    } finally {
-      setIsLoading(false);
-    }
+    } 
   };
 
   const handleHomePress = () => {
@@ -84,7 +82,6 @@ const UserDetails = ({navigation}) => {
   return (
     <ScrollView
       style={styles.container}
-      keyboardShouldPersistTaps="handled"
       showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
         <TouchableOpacity
@@ -98,21 +95,6 @@ const UserDetails = ({navigation}) => {
         <Text style={styles.title}>Enter your details</Text>
 
         <View style={styles.inputContainer}>
-          <View style={styles.inputWrapper}>
-            <Icons
-              name="person-outline"
-              size={20}
-              color="#C6C6C6"
-              style={styles.inputIcon}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Full name"
-              placeholderTextColor={'#C6C6C6'}
-              value={details.name}
-              onChangeText={text => setDetails({...details, name: text})}
-            />
-          </View>
           <View style={styles.inputWrapper}>
             <Icons
               name="person-outline"
@@ -184,11 +166,11 @@ const UserDetails = ({navigation}) => {
         </View>
 
         <TouchableOpacity
-          style={[styles.button, isLoading && styles.buttonDisabled]}
+          style={[styles.button, uploading && styles.buttonDisabled]}
           onPress={handleSave}
-          disabled={isLoading}>
+          disabled={uploading}>
           <Text style={styles.saveButtonText}>
-            {isLoading ? 'Saving...' : 'Save'}
+            {uploading ? 'Saving...' : 'Save'}
           </Text>
         </TouchableOpacity>
         <Modal

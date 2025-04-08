@@ -6,8 +6,6 @@ import PhoneVerificationScreen from './src/Screens/ServiceProvider/PhoneVerifica
 import OTPVerificationScreen from './src/Screens/ServiceProvider/OtpVerificationScreen';
 import ServiceProviderDetails from './src/Screens/ServiceProvider/ServiceProviderDetails';
 import ServiceOfferScreen from './src/Screens/ServiceProvider/ServiceOfferScreen';
-import DocumentUploadScreen from './src/Screens/ServiceProvider/DocumentUploadScreen';
-import BankDetailsScreen from './src/Screens/ServiceProvider/BankDetailScreen';
 import UserVerification from './src/Screens/User/UserVerification';
 import UserOtpScreen from './src/Screens/User/UserOtpScreen';
 import UserDetails from './src/Screens/User/UserDetails';
@@ -54,16 +52,7 @@ const App = () => {
           component={ServiceOfferScreen}
           options={{headerShown: false}}
         />
-        <Stack.Screen
-          name="DocumentUpload"
-          component={DocumentUploadScreen}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="BankDetails"
-          component={BankDetailsScreen}
-          options={{headerShown: false}}
-        />
+
         <Stack.Screen
           name="UserVerification"
           component={UserVerification}
