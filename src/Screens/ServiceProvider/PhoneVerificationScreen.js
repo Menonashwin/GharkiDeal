@@ -19,7 +19,7 @@ const PhoneVerificationScreen = ({navigation}) => {
     try {
       const loginData={
         ph_no: phone,
-        role: 'service_provider',
+        user_type: 'service_provider',
       }
       const response = await fetchData(
         {

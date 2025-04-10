@@ -11,7 +11,7 @@ import {
   Alert,
 } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import { useMutation } from '../../utils/ApiService';
+import {useMutation} from '../../utils/ApiService';
 const UserDetails = ({navigation}) => {
   const [details, setDetails] = useState({
     name: '',
@@ -22,7 +22,7 @@ const UserDetails = ({navigation}) => {
   const [selectedZone, setSelectedZone] = useState('');
   const zone = ['Kakkanad', 'Palarivattom', 'kalamassery', 'Edappally'];
   const [showModal, setShowModal] = useState(false);
-  const { fetchData, loading: uploading, data } = useMutation();
+  const {fetchData, loading: uploading, data} = useMutation();
   const validateForm = () => {
     if (!details.name.trim()) {
       Alert.alert('Error', 'Please enter your full name');
@@ -45,33 +45,28 @@ const UserDetails = ({navigation}) => {
 
   const handleSave = async () => {
     if (!validateForm()) {
-          Alert.alert('Error', 'Please provide at least one field');
-          return;
-        }
-    
+      Alert.alert('Error', 'Please provide at least one field');
+      return;
+    }
+
     try {
       const detailData = {
         name: details.name,
-          email: details.email,
-          address: details.address,
-          zone: selectedZone,
-      }
-      console.log('detaildata : ', data)
-      const response = await fetchData(
-        {
-          endpoint: 'users/profile',
-          method: 'PUT',
-          data: detailData,
-        },
-      );
+        email: details.email,
+        zone: selectedZone,
+      };
+      console.log('detaildata : ', data);
+      const response = await fetchData({
+        endpoint: 'users/profile',
+        method: 'POST',
+        data: detailData,
+      });
       setShowModal(true);
     } catch (error) {
       console.error('Upload error:', error);
-      Alert.alert(
-        'Error', 'Failed to submit form'
-      );
+      Alert.alert('Error', 'Failed to submit form');
       console.error('Error saving profile:', error);
-    } 
+    }
   };
 
   const handleHomePress = () => {
@@ -80,9 +75,7 @@ const UserDetails = ({navigation}) => {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => navigation.goBack()}

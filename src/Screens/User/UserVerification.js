@@ -24,7 +24,7 @@ const UserVerification = ({navigation}) => {
 
       const otpData={
         ph_no: phone,
-        role: 'user',
+        user_type: 'user',
       }
 
       const response = await fetchData (

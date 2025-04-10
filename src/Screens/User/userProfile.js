@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,12 +7,49 @@ import {
   Image,
   SafeAreaView,
   Platform,
+  Alert,
 } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
 import AntIcons from 'react-native-vector-icons/AntDesign';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import {useMutation} from '../../utils/ApiService';
+const UserProfile = ({navigation}) => {
+  const [profileImage, setProfileImage] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const {fetchData} = useMutation();
 
-const UserProfile = ({ navigation }) => {
+ 
+  // Function to fetch profile image from server
+  const fetchProfileImage = async () => {
+    try {
+      setLoading(true);
+      const response = await fetchData({
+        endpoint: 'users/profile',
+        method: 'GET',
+      });
+
+      console.log('Profile Data Response:', response);
+
+      if (response && response.profile.profile_image_url) {
+        // Update with the URL returned from the server
+        setProfileImage({uri: response.profile.profile_image_url});
+      }
+    } catch (error) {
+      console.error('Error fetching profile data:', error);
+      Alert.alert(
+        'Error',
+        'Failed to load profile picture. Please try again later.',
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch profile data when component mounts
+  useEffect(() => {
+    fetchProfileImage();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -20,18 +57,26 @@ const UserProfile = ({ navigation }) => {
       </View>
 
       <View style={styles.profileImageContainer}>
-        <Image
-          source={require('../assets/ashwin.jpeg')}
-          style={styles.profileImage}
-        />
-        <Text style={styles.profileName}>Ashwin</Text>
+        <View style={styles.imageContainer}>
+          {loading ? (
+            <View style={styles.loadingContainer}>
+              <Text style={styles.loadingText}>Loading...</Text>
+            </View>
+          ) : profileImage ? (
+            <Image source={profileImage} style={styles.profileImage} />
+          ) : (
+            <View style={styles.noImageContainer}>
+              <Icons name="person" size={32} color="#00C853" />
+              <Text style={styles.noPhotoText}>No Photo</Text>
+            </View>
+          )}
+        </View>
       </View>
 
       <View style={styles.menuContainer}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => navigation.navigate('EditProfile')}
-        >
+          onPress={() => navigation.navigate('EditProfile')}>
           <View style={styles.menuIconContainer}>
             <Icons name="person" size={20} color="#666" />
           </View>
@@ -39,10 +84,9 @@ const UserProfile = ({ navigation }) => {
           <Icons name="chevron-right" size={24} color="#00C853" />
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => navigation.navigate('Notification')}
-        >
+          onPress={() => navigation.navigate('Notification')}>
           <View style={styles.menuIconContainer}>
             <AntIcons name="bells" size={20} color="#666" />
           </View>
@@ -50,10 +94,9 @@ const UserProfile = ({ navigation }) => {
           <Icons name="chevron-right" size={24} color="#00C853" />
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => navigation.navigate('PaymentMethod')}
-        >
+          onPress={() => navigation.navigate('PaymentMethod')}>
           <View style={styles.menuIconContainer}>
             <FontAwesome name="credit-card" size={20} color="#666" />
           </View>
@@ -61,10 +104,9 @@ const UserProfile = ({ navigation }) => {
           <Icons name="chevron-right" size={24} color="#00C853" />
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => navigation.navigate('HelpSupport')}
-        >
+          onPress={() => navigation.navigate('HelpSupport')}>
           <View style={styles.menuIconContainer}>
             <Icons name="help-outline" size={20} color="#666" />
           </View>
@@ -72,10 +114,9 @@ const UserProfile = ({ navigation }) => {
           <Icons name="chevron-right" size={24} color="#00C853" />
         </TouchableOpacity>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.menuItem}
-          onPress={() => navigation.navigate('LogoutConfirmation')}
-        >
+          onPress={() => navigation.navigate('LogoutConfirmation')}>
           <View style={styles.menuIconContainer}>
             <Icons name="logout" size={20} color="#666" />
           </View>
@@ -84,11 +125,15 @@ const UserProfile = ({ navigation }) => {
       </View>
 
       <View style={styles.bottomNavigation}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('UserHome')}>
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate('UserHome')}>
           <Icons name="home" size={24} color="#999" />
           <Text style={styles.navText}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Order')}>
+        <TouchableOpacity
+          style={styles.navItem}
+          onPress={() => navigation.navigate('ScheduledOrder')}>
           <Icons name="receipt" size={24} color="#999" />
           <Text style={styles.navText}>Order</Text>
         </TouchableOpacity>
@@ -119,16 +164,36 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 20,
   },
+  imageContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+  },
   profileImage: {
     width: 80,
     height: 80,
     borderRadius: 40,
   },
-  profileName: {
-    fontSize: 16,
-    fontWeight: '500',
-    marginTop: 8,
-    color: '#333',
+  loadingContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: '#666',
+    fontSize: 12,
+  },
+  noImageContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  noPhotoText: {
+    fontSize: 12,
+    color: '#666',
+    marginTop: 4,
   },
   menuContainer: {
     marginTop: 16,
@@ -149,10 +214,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
-  },
-  menuIcon: {
-    width: 20,
-    height: 20,
   },
   menuText: {
     flex: 1,

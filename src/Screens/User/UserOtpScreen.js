@@ -31,6 +31,7 @@ const UserOtpScreen = ({navigation, route}) => {
         const receivedOTPData={
           ph_no: phone,
           otp: receivedOTP,
+          user_type: 'user',
         }
         console.log('Received OTP:', receivedOTPData);
         const response = await fetchData( {

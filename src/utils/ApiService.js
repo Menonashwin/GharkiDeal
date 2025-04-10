@@ -2,7 +2,7 @@ import {useState} from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const API_URL =
-  'https://d835-2401-4900-1cde-c82a-51bd-4235-ad31-3531.ngrok-free.app/';
+  'https://4895-2401-4900-1cde-c82a-f499-3b20-8888-63ff.ngrok-free.app/';
 
 // Token management functions
 export const storeAuthToken = async (token, role) => {
@@ -10,7 +10,7 @@ export const storeAuthToken = async (token, role) => {
     console.warn('Invalid token. Not storing to AsyncStorage.');
     return false;
   }
-
+console.log("Token:",token ,role)
   try {
     await AsyncStorage.setItem('auth_token', token);
     await AsyncStorage.setItem('role', role);
@@ -65,7 +65,6 @@ export const useMutation = () => {
 
       if (data) {
         if (data instanceof FormData) {
-          // For FormData, don't set Content-Type as the browser will set it with the boundary
           options.body = data;
         } else {
           options.headers = {
@@ -79,15 +78,14 @@ export const useMutation = () => {
       const response = await fetch(`${API_URL}${endpoint}`, options);
       const authHeader = response?.headers?.map?.authorization;
       const result = await response.json();
-      const role = result?.role;
-      console.log(role);
+      const role = result?.user_type;
+      // console.log('blahhhhhh ---',authHeader,result);
       if (authHeader && role) {
       if (authHeader) {
         const auth_token = authHeader.split(' ');
         if (auth_token.length > 1) {
           console.log('Auth Token:', auth_token[1]);
           await storeAuthToken(auth_token[1], role);
-
         }
       }
     }
@@ -129,7 +127,7 @@ export const useMutation = () => {
 
 //     // Add image if selected
 //     if (image) {
-//       formData.append('profilePicture', {
+//       formData.append('file', {
 //         uri: image,
 //         name: 'image.jpg',
 //         type: 'image/jpeg',

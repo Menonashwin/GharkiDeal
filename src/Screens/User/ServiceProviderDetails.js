@@ -11,7 +11,6 @@ import {
 } from 'react-native';
 
 import AntIcons from 'react-native-vector-icons/AntDesign';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 const ServiceProviderDetailsScreen = ({ route, navigation }) => {
   // Extract the provider data from route params
@@ -24,33 +23,9 @@ const ServiceProviderDetailsScreen = ({ route, navigation }) => {
     color: '#FFE0B2',
     ordersCompleted: 56,
     experience: 4,
-    skills: ['Sink', 'Shower', 'Boiler', 'Toilet'],
     bio: "I'm Emily Jani, a dedicated plumbing professional with 4 years of experience. I'm here to ensure your home's plumbing runs smoothly, with years of trusted experience.",
     reviews: [
-      {
-        id: 1,
-        name: 'Josh Peter',
-        date: '12/01/2024',
-        rating: 5,
-        comment: 'Emily Jani exceeded my expectations! Quick, reliable, and fixed my plumbing issue with precision. Highly recommend.',
-        avatar: 'J',
-      },
-      {
-        id: 2,
-        name: 'Caleb',
-        date: '12/01/2024',
-        rating: 4,
-        comment: 'Emily Jani exceeded my expectations! Quick, reliable, and fixed my plumbing issue with precision. Highly recommend.',
-        avatar: 'C',
-      },
-      {
-        id: 3,
-        name: 'Ethan',
-        date: '12/01/2024',
-        rating: 4,
-        comment: 'Emily Jani exceeded my expectations! Quick, reliable, and fixed my plumbing issue with precision. Highly recommend.',
-        avatar: 'E',
-      },
+      {comment:'There are no comments yet'}
     ],
   };
 
@@ -122,18 +97,6 @@ const ServiceProviderDetailsScreen = ({ route, navigation }) => {
           </View>
         </View>
 
-        {/* Skills Section */}
-        <View style={styles.sectionContainer}>
-          <Text style={styles.sectionTitle}>Skills</Text>
-          <View style={styles.skillsContainer}>
-            {provider.skills.map((skill, index) => (
-              <View key={index} style={styles.skillBadge}>
-                <Text style={styles.skillText}>{skill}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-
         {/* Book Button */}
         <TouchableOpacity style={styles.bookButton} onPress={handleBookPress}>
           <Text style={styles.bookButtonText}>Book</Text>
@@ -167,11 +130,6 @@ const ServiceProviderDetailsScreen = ({ route, navigation }) => {
           ))}
         </View>
       </ScrollView>
-
-      {/* Call button */}
-      <TouchableOpacity style={styles.callButton}>
-        <AntIcons name="phone" size={24} color="#fff" />
-      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -272,23 +230,6 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 12,
   },
-  skillsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  skillBadge: {
-    backgroundColor: '#F0F0F0',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginRight: 8,
-    marginBottom: 8,
-  },
-  skillText: {
-    fontSize: 14,
-    color: '#333',
-  },
   bookButton: {
     backgroundColor: '#4CAF50',
     marginHorizontal: 16,
@@ -354,22 +295,7 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#555',
   },
-  callButton: {
-    position: 'absolute',
-    right: 16,
-    bottom: 80,
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: '#4CAF50',
-    justifyContent: 'center',
-    alignItems: 'center',
-    elevation: 5,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
+
 });
 
 export default ServiceProviderDetailsScreen;

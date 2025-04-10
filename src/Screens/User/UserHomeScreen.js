@@ -177,7 +177,7 @@ const UserHomeScreen = ({navigation}) => {
           <Icons name="home" size={24} color="#00C853" />
           <Text style={styles.activeNavText}>Home</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Orders')}>
+        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('ScheduledOrder')}>
           <Icons name="receipt" size={24} color="#999" />
           <Text style={styles.navText}>Order</Text>
         </TouchableOpacity>

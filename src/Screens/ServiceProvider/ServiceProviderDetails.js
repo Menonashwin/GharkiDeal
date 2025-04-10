@@ -5,9 +5,12 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import { useMutation } from '../../utils/ApiService';
+import {useMutation} from '../../utils/ApiService';
+import {Picker} from '@react-native-picker/picker';
+
 const ServiceProviderDetails = ({navigation}) => {
   const [details, setDetails] = useState({
     name: '',
@@ -16,72 +19,84 @@ const ServiceProviderDetails = ({navigation}) => {
     zone: '',
   });
   const [selectedZone, setSelectedZone] = useState('');
+  const [selectedServiceType, setSelectedServiceType] = useState('');
+
   const zone = ['Kakkanad', 'Palarivattom', 'kalamassery', 'Edappally'];
-  const { fetchData, loading: uploading, data } = useMutation();
+  const serviceTypes = [
+    'Plumbing',
+    'Electrical',
+    'Carpentry',
+    'Cleaning',
+    'Painting',
+    'Gardening',
+  ];
 
-    const validateForm = () => {
-      if (!details.name.trim()) {
-        Alert.alert('Error', 'Please enter your full name');
-        return false;
-      }
-      if (!details.email.trim()) {
-        Alert.alert('Error', 'Please enter your email');
-        return false;
-      }
-      if (!selectedZone) {
-        Alert.alert('Error', 'Please select your zone');
-        return false;
-      }
-      if (!details.address.trim()) {
-        Alert.alert('Error', 'Please enter your address');
-        return false;
-      }
-      return true;
-    };
+  const {fetchData, loading: uploading, data} = useMutation();
 
-     const handleSave = async () => {
-        if (!validateForm()) {
-              Alert.alert('Error', 'Please provide at least one field');
-              return;
-            }
-        
-        try {
-          const detailData = {
-            name: details.name,
-              email: details.email,
-              address: details.address,
-              zone: selectedZone,
-          }
-          console.log('detaildata : ', data)
-          const response = await fetchData(
-            {
-              endpoint: 'users/profile',
-              method: 'PUT',
-              data: detailData,
-            },
-          );
-        } catch (error) {
-          console.error('Upload error:', error);
-          Alert.alert(
-            'Error', 'Failed to submit form'
-          );
-          console.error('Error saving profile:', error);
-        } 
+  const validateForm = () => {
+    if (!details.name.trim()) {
+      Alert.alert('Error', 'Please enter your full name');
+      return false;
+    }
+    if (!details.email.trim()) {
+      Alert.alert('Error', 'Please enter your email');
+      return false;
+    }
+    if (!selectedZone) {
+      Alert.alert('Error', 'Please select your zone');
+      return false;
+    }
+    if (!details.address.trim()) {
+      Alert.alert('Error', 'Please enter your address');
+      return false;
+    }
+    if (!selectedServiceType) {
+      Alert.alert('Error', 'Please select a service type');
+      return false;
+    }
+    return true;
+  };
+
+  const handleSave = async () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    try {
+      const detailData = {
+        name: details.name,
+        email: details.email,
+        zone: selectedZone,
+        address: details.address,
+        service_type: selectedServiceType,
       };
 
-  
+      const response = await fetchData({
+        endpoint: 'service-providers/profile',
+        method: 'POST',
+        data: detailData,
+      });
+
+      console.log('detaildata : ', response);
+      if (response) {
+        navigation.navigate('ServiceOffer'); 
+      }
+    } catch (error) {
+      console.error('Upload error:', error);
+      Alert.alert('Error', 'Failed to submit form');
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icons name="west" size={20} color="#C6C6C6 " />
+          <Icons name="west" size={20} color="#C6C6C6" />
         </TouchableOpacity>
       </View>
-
-      <Text style={styles.title}>Enter your details</Text>
-
-      <View style={styles.inputContainer}>
+      <View style={styles.contentContainer}>
+        <Text style={styles.title}>Enter your details</Text>
+        <View style={styles.inputContainer}>
           <View style={styles.inputWrapper}>
             <Icons
               name="person-outline"
@@ -115,6 +130,30 @@ const ServiceProviderDetails = ({navigation}) => {
             />
           </View>
 
+          {/* Service Type Picker */}
+          <View style={styles.inputWrapper}>
+            <Icons
+              name="home-repair-service"
+              size={20}
+              color="#C6C6C6"
+              style={styles.inputIcon}
+            />
+            <Picker
+              selectedValue={selectedServiceType}
+              onValueChange={itemValue => setSelectedServiceType(itemValue)}
+              style={styles.input}
+              dropdownIconColor="#C6C6C6">
+              <Picker.Item
+                label="Select Service Type"
+                value=""
+                color="#C6C6C6"
+              />
+              {serviceTypes.map(type => (
+                <Picker.Item key={type} label={type} value={type} />
+              ))}
+            </Picker>
+          </View>
+
           <View style={styles.inputWrapper}>
             <Icons
               name="location-on"
@@ -126,14 +165,14 @@ const ServiceProviderDetails = ({navigation}) => {
               selectedValue={selectedZone}
               onValueChange={itemValue => setSelectedZone(itemValue)}
               style={styles.input}
-              dropdownIconColor="#C6C6C6"
-              placeholder="Select Your Zone">
+              dropdownIconColor="#C6C6C6">
               <Picker.Item label="Select Your Zone" value="" color="#C6C6C6" />
               {zone.map(area => (
                 <Picker.Item key={area} label={area} value={area} />
               ))}
             </Picker>
           </View>
+
           <View style={styles.inputWrapper}>
             <Icons
               name="location-on"
@@ -160,12 +199,7 @@ const ServiceProviderDetails = ({navigation}) => {
             {uploading ? 'Saving...' : 'Save'}
           </Text>
         </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => navigation.navigate('ServiceOffer')}>
-        <Text style={styles.buttonText}>Submit</Text>
-      </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -229,17 +263,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: '500',
-  },
-  button: {
-    backgroundColor: '#00C853',
-    padding: 15,
-    borderRadius: 8,
-    alignItems: 'center',
-    marginTop: 20,
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
   },
 });
 

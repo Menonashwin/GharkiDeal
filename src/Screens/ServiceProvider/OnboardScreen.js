@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 
 const OnboardScreen = ({navigation}) => {
-  
   const [selectedOption, setSelectedOption] = useState(null);
 
   const SelectionCard = ({title, description, onPress, isSelected}) => (

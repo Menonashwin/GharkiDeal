@@ -9,9 +9,6 @@ import {
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import Icons from 'react-native-vector-icons/MaterialIcons';
-import * as Keychain from 'react-native-keychain';
-import axios from 'axios';
-import {API_URL} from 'react-native-dotenv';
 import {useMutation} from '../../utils/ApiService';
 
 const OTPVerificationScreen = ({navigation, route}) => {
@@ -33,6 +30,7 @@ const OTPVerificationScreen = ({navigation, route}) => {
         const providerOtpData = {
           ph_no: phone,
           otp: receivedOTP,
+          user_type: 'service_provider',
         };
         const response = await fetchData({
           endpoint: 'auth/verify-otp',

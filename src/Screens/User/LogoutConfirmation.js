@@ -17,20 +17,12 @@ const LogoutConfirmation = ({ navigation }) => {
         <Text style={styles.headerTitle}>My Profile</Text>
       </View>
 
-      <View style={styles.profileImageContainer}>
-        <Image
-          source={require('../assets/ashwin.jpeg')}
-          style={styles.profileImage}
-        />
-        <Text style={styles.profileName}>Ashwin</Text>
-      </View>
-
       <View style={styles.logoutModalContainer}>
         <View style={styles.logoutModal}>
           <Text style={styles.logoutTitle}>Logout</Text>
           <Text style={styles.logoutConfirmText}>Are you sure to logout?</Text>
           
-          <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('PhoneVerification')}>
+          <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('Onboard')}>
             <Text style={styles.logoutButtonText}>Logout</Text>
           </TouchableOpacity>
           
