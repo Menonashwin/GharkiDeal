@@ -20,6 +20,9 @@ import ServiceProvidersScreen from './src/Screens/User/ServiceProviderList';
 import ServiceProviderDetailsScreen from './src/Screens/User/ServiceProviderDetails';
 import ServiceProviderBookingScreen from './src/Screens/User/BookingAddress';
 import BookingDateScreen from './src/Screens/User/BookingDate';
+import ScheduledOrdersScreen from './src/Screens/orders/ScheduledOrder';
+import SplashScreen from './src/Screens/SplashScreen';
+import AddressScreen from './src/Screens/User/AddBankDetails';
 
 const Stack = createNativeStackNavigator();
 
@@ -27,6 +30,11 @@ const App = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        <Stack.Screen
+        name='Splash'
+        component={SplashScreen}
+        options={{headerShown: false}}
+        />
         <Stack.Screen
           name="Onboard"
           component={OnboardScreen}
@@ -90,8 +98,13 @@ const App = () => {
         />
         <Stack.Screen
           name="PaymentMethod"
-          component={AddBankDetails}
+          component={AddressScreen}
           options={{headerShown: false}}
+        />
+        <Stack.Screen
+        name='AddAddress'
+        component={AddressScreen}
+        options={{headerShown: false}}
         />
         <Stack.Screen
           name="LogoutConfirmation"
@@ -126,6 +139,12 @@ const App = () => {
           name="BookingDate"
           component={BookingDateScreen}
           options={{headerShown: false}}
+        />
+      
+        <Stack.Screen
+        name="ScheduledOrder"
+        component={ScheduledOrdersScreen}
+        options={{headerShown: false}}
         />
       </Stack.Navigator>
     </NavigationContainer>
