@@ -33,10 +33,8 @@ const EditProfile = ({navigation}) => {
     fetchProfile();
   }, []);
 
-  // Function to fetch user profile data
   const fetchProfile = async () => {
     try {
-      // uploading(true);
       const response = await fetchData({
         endpoint: 'users/profile',
         method: 'GET',
@@ -56,7 +54,6 @@ const EditProfile = ({navigation}) => {
           email: response.profile?.email || '',
           zone: response.zone || '',
           ph_no: response.ph_no || '',
-          // Set profile image if available
           profileImage: response.profile?.profile_image_url
             ? {uri: response?.profile.profile_image_url}
             : null,
@@ -100,19 +97,18 @@ const EditProfile = ({navigation}) => {
       setSubmitting(true);
       const formData = new FormData();
       if (imageSelected) {
-        console.log('Image Selected:', imageSelected);
         formData.append('file', {
           uri: profileData.profileImage.uri,
           name: 'image.jpg',
           type: 'image/jpeg',
         });
       }
+      console.log('Image Selected:',  profileData.profileImage.uri,formData);
       await fetchData({
         endpoint: 'users/profile-image',
         method: 'POST',
         data: formData,
       });
-
       const LogData = {
         name: profileData.name,
         email: profileData.email,
@@ -205,17 +201,7 @@ const EditProfile = ({navigation}) => {
           />
         </View>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.inputLabel}>Address</Text>
-          <TextInput
-            style={styles.input}
-            value={profileData.address}
-            onChangeText={text =>
-              setProfileData({...profileData, address: text})
-            }
-            placeholder="Enter your address"
-          />
-        </View>
+
 
         <View style={styles.inputContainer}>
           <Text style={styles.inputLabel}>Zone</Text>

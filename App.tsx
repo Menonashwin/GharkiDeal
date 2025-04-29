@@ -23,6 +23,7 @@ import BookingDateScreen from './src/Screens/User/BookingDate';
 import ScheduledOrdersScreen from './src/Screens/orders/ScheduledOrder';
 import SplashScreen from './src/Screens/SplashScreen';
 import AddressScreen from './src/Screens/User/AddBankDetails';
+import AddAddressScreen from './src/Screens/User/AddAddressScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -98,12 +99,12 @@ const App = () => {
         />
         <Stack.Screen
           name="PaymentMethod"
-          component={AddressScreen}
+          component={AddBankDetails}
           options={{headerShown: false}}
         />
         <Stack.Screen
         name='AddAddress'
-        component={AddressScreen}
+        component={AddAddressScreen}
         options={{headerShown: false}}
         />
         <Stack.Screen

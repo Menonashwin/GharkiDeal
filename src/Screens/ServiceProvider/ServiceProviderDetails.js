@@ -20,7 +20,9 @@ const ServiceProviderDetails = ({navigation}) => {
   });
   const [selectedZone, setSelectedZone] = useState('');
   const [selectedServiceType, setSelectedServiceType] = useState('');
+  const [selectedExperience, setSelectedExperience] = useState('');
 
+  const experiences = ['1-2 years', '2-5 years', '5+ years'];
   const zone = ['Kakkanad', 'Palarivattom', 'kalamassery', 'Edappally'];
   const serviceTypes = [
     'Plumbing',
@@ -54,6 +56,10 @@ const ServiceProviderDetails = ({navigation}) => {
       Alert.alert('Error', 'Please select a service type');
       return false;
     }
+    if (!selectedExperience) {
+      Alert.alert('Error', 'Please select your experience');
+      return false;
+    }
     return true;
   };
 
@@ -69,6 +75,7 @@ const ServiceProviderDetails = ({navigation}) => {
         zone: selectedZone,
         address: details.address,
         service_type: selectedServiceType,
+        experience_years: parseInt(selectedExperience),
       };
 
       const response = await fetchData({
@@ -79,7 +86,7 @@ const ServiceProviderDetails = ({navigation}) => {
 
       console.log('detaildata : ', response);
       if (response) {
-        navigation.navigate('ServiceOffer'); 
+        navigation.navigate('ServiceOffer');
       }
     } catch (error) {
       console.error('Upload error:', error);
@@ -152,6 +159,23 @@ const ServiceProviderDetails = ({navigation}) => {
                 <Picker.Item key={type} label={type} value={type} />
               ))}
             </Picker>
+          </View>
+          <View style={styles.inputWrapper}>
+          <Icons
+              name="home-repair-service"
+              size={20}
+              color="#C6C6C6"
+              style={styles.inputIcon}
+            />
+              <Picker
+                selectedValue={selectedExperience}
+                onValueChange={itemValue => setSelectedExperience(itemValue)}
+                style={styles.input}>
+                <Picker.Item label="Select Experience" value=""  color="#C6C6C6"/>
+                {experiences.map(exp => (
+                  <Picker.Item key={exp} label={exp} value={exp} />
+                ))}
+              </Picker>
           </View>
 
           <View style={styles.inputWrapper}>

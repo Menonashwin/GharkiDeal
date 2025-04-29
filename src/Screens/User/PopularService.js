@@ -81,22 +81,6 @@ const PopularServicesScreen = ({ navigation }) => {
           </View>
         </View>
       </ScrollView>
-      
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNavigation}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Home')}>
-          <Icons name="home" size={24} color="#999" />
-          <Text style={styles.navText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Orders')}>
-          <Icons name="receipt" size={24} color="#999" />
-          <Text style={styles.navText}>Order</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('UserProfile')}>
-          <Icons name="person-outline" size={24} color="#00C853" />
-          <Text style={styles.activeNavText}>Profile</Text>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };

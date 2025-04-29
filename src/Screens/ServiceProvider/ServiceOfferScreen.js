@@ -1,22 +1,18 @@
 import React, {useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet, Alert} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
 import * as DocumentPicker from 'react-native-document-picker';
 import Icons from 'react-native-vector-icons/MaterialIcons';
+import {useMutation} from '../../utils/ApiService';
 
 const ServiceOfferScreen = ({navigation}) => {
-  const [selectedService, setSelectedService] = useState('');
-  const [selectedExperience, setSelectedExperience] = useState('');
   const [aadharDocument, setAadharDocument] = useState(null);
-
-  const services = ['Plumber', 'Electrician', 'Carpenter', 'Painter'];
-  const experiences = ['1-2 years', '2-5 years', '5+ years'];
+  const { fetchData, loading: uploading, data } = useMutation();
 
   const pickDocument = async () => {
     try {
       const result = await DocumentPicker.pickSingle({
         type: [DocumentPicker.types.images, DocumentPicker.types.pdf],
-        copyTo: 'cachesDirectory', 
+        copyTo: 'cachesDirectory',
       });
       console.log('Document selected:', result);
       setAadharDocument(result);
@@ -30,17 +26,33 @@ const ServiceOfferScreen = ({navigation}) => {
     }
   };
 
-  const handleNext = () => {
-    if (selectedService && selectedExperience && aadharDocument) {
-      console.log('Form data:', {
-        service: selectedService,
-        experience: selectedExperience,
-        document: aadharDocument,
+  const handleNext = async() => {
+      if (!aadharDocument) {
+    Alert.alert('Error', 'Please provide at least one field');
+    return;
+  }
+      try{
+        const formData = new FormData();
+        if(aadharDocument){
+          formData.append('file', {
+            uri: aadharDocument.uri,
+            name: 'image.jpg',
+            type: 'image/jpeg',
+          });   
+      }
+      const response = await fetchData({
+        endpoint: 'service-providers/id-proof',
+        method: 'POST',
+        data: formData,
       });
+      console.log('Response:', response);
+      Alert.alert('Success', 'Document uploaded successfully!');
       navigation.navigate('UserHome');
-    } else {
-      Alert.alert('Incomplete', 'Please fill all fields and upload Aadhar.');
-    }
+      }
+      catch (error) {
+        console.error('Upload error:', error);
+        Alert.alert('Error', 'Failed to upload document');
+      }
   };
 
   return (
@@ -51,31 +63,7 @@ const ServiceOfferScreen = ({navigation}) => {
         <Icons name="west" size={20} color="#C6C6C6" />
       </TouchableOpacity>
 
-      <Text style={styles.title}>Service Offer</Text>
-
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedService}
-          onValueChange={val => setSelectedService(val)}
-          style={styles.picker}>
-          <Picker.Item label="Select Your Service" value="" />
-          {services.map(service => (
-            <Picker.Item key={service} label={service} value={service} />
-          ))}
-        </Picker>
-      </View>
-
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={selectedExperience}
-          onValueChange={val => setSelectedExperience(val)}
-          style={styles.picker}>
-          <Picker.Item label="Select Experience" value="" />
-          {experiences.map(exp => (
-            <Picker.Item key={exp} label={exp} value={exp} />
-          ))}
-        </Picker>
-      </View>
+      <Text style={styles.title}>Document Upload</Text>
 
       <Text style={styles.uploadLabel}>Upload your Aadhar Card</Text>
       <TouchableOpacity style={styles.uploadButton} onPress={pickDocument}>
@@ -99,10 +87,10 @@ const ServiceOfferScreen = ({navigation}) => {
       <TouchableOpacity
         style={[
           styles.nextButton,
-          !(selectedService && selectedExperience && aadharDocument) &&
+          !(aadharDocument) &&
             styles.nextButtonDisabled,
         ]}
-        disabled={!(selectedService && selectedExperience && aadharDocument)}
+        disabled={!(aadharDocument)}
         onPress={handleNext}>
         <Text style={styles.nextButtonText}>Next</Text>
       </TouchableOpacity>

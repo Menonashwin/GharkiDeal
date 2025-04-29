@@ -7,10 +7,27 @@ import {
   Image,
   SafeAreaView,
   Platform,
+  Alert,
 } from 'react-native';
-import Icons from 'react-native-vector-icons/MaterialIcons';
+import { removeAuthToken } from '../../utils/ApiService';
 
 const LogoutConfirmation = ({ navigation }) => {
+
+  const handleLogout = async () => {
+    try{
+      const success = await removeAuthToken();
+      if (success){
+        navigation.navigate('Onboard');
+
+      }else{
+        Alert.alert('Logout Failed', 'Please try again later.');
+      }
+    }catch (error) {
+      console.error('Logout error:', error);
+      Alert.alert('Error', 'Failed to logout. Unexpected error occurred.');
+    }
+  };
+
   return (
     <SafeAreaView style={styles.containerWithOverlay}>
       <View style={styles.header}>
@@ -22,7 +39,7 @@ const LogoutConfirmation = ({ navigation }) => {
           <Text style={styles.logoutTitle}>Logout</Text>
           <Text style={styles.logoutConfirmText}>Are you sure to logout?</Text>
           
-          <TouchableOpacity style={styles.logoutButton} onPress={() => navigation.navigate('Onboard')}>
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
             <Text style={styles.logoutButtonText}>Logout</Text>
           </TouchableOpacity>
           
@@ -30,22 +47,6 @@ const LogoutConfirmation = ({ navigation }) => {
             <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
         </View>
-      </View>
-
-    
-      <View style={styles.bottomNavigation}>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('UserHome')}>
-          <Icons name="home" size={24} color="#999" />
-          <Text style={styles.navText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('Order')}>
-          <Icons name="receipt" size={24} color="#999" />
-          <Text style={styles.navText}>Order</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Icons name="person" size={24} color="#00C853" />
-          <Text style={styles.activeNavText}>Profile</Text>
-        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );

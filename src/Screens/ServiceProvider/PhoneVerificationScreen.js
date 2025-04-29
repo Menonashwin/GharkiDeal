@@ -14,7 +14,6 @@ const PhoneVerificationScreen = ({navigation}) => {
   const [phone, setPhone] = useState('');
   const { fetchData, loading: uploading, data } = useMutation();
 
-  console.log('error occured');
   const handleSubmit = async () => {
     try {
       const loginData={

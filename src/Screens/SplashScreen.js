@@ -14,18 +14,18 @@ const SplashScreen = () => {
     return () => clearTimeout(timer);
   }, [navigation]);
 
-    // useEffect(() => {
-    //   const checkAuth = async () => {
-    //     const token = await getAuthToken();
-    //     if (token) {
-    //       navigation.replace('UserHome');
-    //     } else {
-    //       navigation.replace('Onboard');
-    //     }
-    //   };
+    useEffect(() => {
+      const checkAuth = async () => {
+        const token = await getAuthToken();
+        if (token) {
+          navigation.replace('UserHome');
+        } else {
+          navigation.replace('Onboard');
+        }
+      };
   
-    //   checkAuth();
-    // }, []);
+      checkAuth();
+    }, []);
 
   return (
     <LinearGradient

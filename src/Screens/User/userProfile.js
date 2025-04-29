@@ -45,6 +45,24 @@ const UserProfile = ({navigation}) => {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      const success = await removeAuthToken();
+      if (success) {
+        // Navigate to Login screen or wherever you want after logout
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'Login' }], // Replace 'Login' with your actual login screen name
+        });
+      } else {
+        Alert.alert('Error', 'Failed to logout. Please try again.');
+      }
+    } catch (error) {
+      console.error('Logout error:', error);
+      Alert.alert('Error', 'An unexpected error occurred during logout.');
+    }
+  };
+
   // Fetch profile data when component mounts
   useEffect(() => {
     fetchProfileImage();
@@ -101,6 +119,16 @@ const UserProfile = ({navigation}) => {
             <FontAwesome name="credit-card" size={20} color="#666" />
           </View>
           <Text style={styles.menuText}>Payment method</Text>
+          <Icons name="chevron-right" size={24} color="#00C853" />
+        </TouchableOpacity>
+        
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => navigation.navigate('AddAddress')}>
+          <View style={styles.menuIconContainer}>
+            <FontAwesome name="home" size={20} color="#666" />
+          </View>
+          <Text style={styles.menuText}>Add / View Your Address</Text>
           <Icons name="chevron-right" size={24} color="#00C853" />
         </TouchableOpacity>
 
